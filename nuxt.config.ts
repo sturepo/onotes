@@ -1,6 +1,6 @@
 export default defineNuxtConfig({
     // Enable content to leverages <ContentRendererMarkdown /> component
-    modules: ['@vite-pwa/nuxt', '@nuxt/content', 'nuxt-icon', '@nuxtjs/tailwindcss'],
+    modules: ['@nuxt/content', 'nuxt-icon', '@nuxtjs/tailwindcss'],
     // Define storage used in API routes with useStorage()
     nitro: {
         storage: {
@@ -19,6 +19,6 @@ export default defineNuxtConfig({
     },
     // Password to edit the notes
     runtimeConfig: {
-        password: process.env.NUXT_PASSWORD || 'ilovenuxt'
+        password: process.env.NUXT_PASSWORD || 'nuxt'
     },
 })
