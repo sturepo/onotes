@@ -28,6 +28,7 @@
 					>
 						<DialogPanel
 							class="w-max mt-4 transform rounded-2xl bg-white dark:bg-slate-700 p-6 opacity-100 shadow-xl"
+                            :class="props.class"
 						>
 							<form class="flex items-center gap-x-5" @submit.prevent="closeModal">
 								<input
@@ -59,7 +60,7 @@ import {
 	DialogPanel,
 } from "@headlessui/vue"
 
-const props = defineProps({ inputValue: String, isOpen: Boolean })
+const props = defineProps({ inputValue: String, isOpen: Boolean, class: String })
 const emit = defineEmits(["update:inputValue", "update:isOpen"])
 const isOpen = ref(false)
 

@@ -7,6 +7,7 @@ import { useEditor, EditorContent, Content } from "@tiptap/vue-3"
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import Typography from '@tiptap/extension-typography'
+import Link from'@tiptap/extension-link'
 import Highlight from "@tiptap/extension-highlight"
 import StarterKit from "@tiptap/starter-kit"
 
@@ -37,7 +38,7 @@ const editor = useEditor({
     },
     editorProps: {
         attributes: {
-            class: "prose font-op dark:prose-invert max-w-none prose-slate mx-auto lg:prose-lg m-5 focus:outline-none",
+            class: "prose dark:prose-invert md:w-[767px] lg:w-[1023px] max-w-none prose-slate font-op focus:outline-none",
         },
     },
     editable: props.editing
