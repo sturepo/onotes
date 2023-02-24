@@ -19,6 +19,6 @@ export default defineNuxtConfig({
     },
     // Password to edit the notes
     runtimeConfig: {
-        password: process.env.NUXT_PASSWORD || 'ilovenuxt'
+        password: process.env.NUXT_PASSWORD || 'nuxt'
     },
 })

@@ -91,9 +91,11 @@ onKeyStroke(['ctrl', ';'], (e) => {
             page.parsed.description || 'A notes taking app on the edge'
         " />
     </Head>
-    <div class="flex items-center justify-center w-full" @dblclick="editMode">
-        <div class="bg-white dark:bg-slate-800 w-full sm:w-max px-3 pt-3 sm:px-5 sm:pt-3 shadow shadow-slate-300 dark:shadow-slate-600 rounded-md min-h-[calc(100vh-240px)]">
-            <Tiptap @blur="save" :editing="editing" v-model="page.body" />
+    <div class="dark:bg-slate-900 bg-slate-100 flex flex-col items-center justify-center min-h-screen pt-6 pb-8"
+        @click="save">
+        <div
+            class="bg-white dark:bg-slate-800 w-full sm:w-max px-3 pt-3 sm:px-5 sm:pt-3 shadow shadow-slate-300 dark:shadow-slate-600 rounded-md min-h-[calc(100vh-240px)]">
+            <Tiptap @click.stop="editMode" :editing="editing" v-model="page.body" />
         </div>
     </div>
     <div class="flex flex-col items-end fixed right-10 bottom-8 gap-y-4">
@@ -125,5 +127,5 @@ onKeyStroke(['ctrl', ';'], (e) => {
                 name="heroicons:check-badge-solid" class="w-5 h-5 text-white" />
         </div>
     </div>
-    <Prompt v-model:input-value="password" :class=" prevPassword != '' && '!bg-purple-600'" v-model:is-open="isOpen" />
+    <Prompt v-model:input-value="password" :class="prevPassword != '' && '!bg-purple-600'" v-model:is-open="isOpen" />
 </template>
