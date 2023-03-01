@@ -22,6 +22,7 @@ specifiers:
   '@vueuse/core': ^9.13.0
   highlight.js: ^11.7.0
   lowlight: ^2.8.1
+  nanoid: ^4.0.1
   nuxt: ^3.2.2
   nuxt-icon: ^0.3.2
   tippy.js: ^6.3.7
@@ -39,6 +40,7 @@ dependencies:
   '@tiptap/vue-3': 2.0.0-beta.218_p7b6nzxe7qctmzbzapdik3nr64
   highlight.js: 11.7.0
   lowlight: 2.8.1
+  nanoid: 4.0.1
 
 devDependencies:
   '@headlessui/vue': 1.7.10
@@ -6538,7 +6540,6 @@ packages:
     resolution: {integrity: sha512-udKGtCCUafD3nQtJg9wBhRP3KMbPglUsgV5JVsXhvyBs/oefqb4sqMEhKBBgqZncYowu58p1prsZQBYvAj/Gww==}
     engines: {node: ^14 || ^16 || >=18}
     hasBin: true
-    dev: true
 
   /negotiator/0.6.3:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}

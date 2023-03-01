@@ -1,4 +1,4 @@
-# ONOTES
+# NOTES
 
 Read more on https://onotes.onotes.worker.dev
 

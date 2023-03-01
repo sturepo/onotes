@@ -17,9 +17,28 @@ import js from 'highlight.js/lib/languages/javascript'
 import ts from 'highlight.js/lib/languages/typescript'
 import html from 'highlight.js/lib/languages/xml'
 
-const props = defineProps({ modelValue: String, editing: Boolean })
-const emit = defineEmits(["update:modelValue", "blur"])
+
+const props = defineProps({ modelValue: String, editingValue: Boolean })
+const emit = defineEmits(["update:modelValue", "update:editingValue", "blur"])
 const editorRef = ref()
+
+const editing = computed({
+    get() {
+        return props.editingValue
+    },
+    set(newValue) {
+        emit('update:editingValue', newValue)
+    }
+})
+
+const body = computed({
+    get() {
+        return props.modelValue
+    },
+    set(newValue) {
+        emit('update:modelValue', newValue)
+    }
+})
 
 lowlight.registerLanguage('html', html)
 lowlight.registerLanguage('css', css)
@@ -29,7 +48,12 @@ lowlight.registerLanguage('ts', ts)
 const editor = useEditor({
     content: props.modelValue,
     extensions: [
-        StarterKit,
+        StarterKit.configure({
+            // disable extension as it's already present in CodeBlockLowlight
+            codeBlock: false,
+            // collaboration comes with it's own history extension
+            // history: false
+        }),
         TaskList,
         Typography,
         TaskItem.configure({
@@ -43,7 +67,7 @@ const editor = useEditor({
         Link,
         CodeBlockLowlight.configure({
             lowlight,
-        })
+        }),
     ],
     onBlur: () => {
         emit("blur", false)
@@ -56,15 +80,18 @@ const editor = useEditor({
             class: "prose dark:prose-invert md:w-[767px] lg:w-[1023px] max-w-none prose-slate font-op focus:outline-none",
         },
     },
-    editable: props.editing
+    editable: props.editingValue
 })
 
-watch(props, () => {
-    const isSame = editor.value?.getHTML() === props.modelValue
+watch(body, (content) => {
+    const isSame = editor.value?.getHTML() === content
     if (!isSame) {
-        editor.value?.commands.setContent(props.modelValue as Content, false)
+        editor.value?.commands.setContent(content as Content, false)
     }
-    if (props?.editing === true) {
+})
+
+watch(editing, (isEditing) => {
+    if (isEditing === true) {
         editor.value?.setEditable(true)
         editor.value?.commands.focus()
     } else {
@@ -89,6 +116,7 @@ ul[data-type=taskList] div {
 
 ul[data-type=taskList] p {
     margin: 0;
+    line-height: 8px;
 }
 
 ul[data-type=taskList] li {

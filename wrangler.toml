@@ -1,11 +1,11 @@
-name = "onotes"
+name = "notes"
 main = "./.output/server/index.mjs"
 workers_dev = true
 compatibility_date = "2022-09-10"
 account_id = "fd68bd5ae8f7a9aa3f03ea057fcc3233"
 route = "onotes.workers.dev/*"
 kv_namespaces = [
-  { binding = "ONOTES", id = "498f7faa083e4d1eb0b5ad9721cc294a" }
+  { binding = "NOTES", id = "008227be271d4982afff7528bc903229", preview_id = "3a3f74f2e26d4b9a84ad97d61402caa6"  },
 ]
 [site]
 bucket = ".output/public"
