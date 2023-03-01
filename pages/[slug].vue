@@ -17,7 +17,6 @@ const isOpen = signal(false)
 const password = usePassword()
 // QW5tBw
 // Fetch the page on SSR
-
 if (!page.value) {
     try {
         page.value = {
@@ -89,7 +88,6 @@ async function editMode() {
 function save() {
     if (!page.value.editing || page.value.saving) return
     page.value.saving = true
-    console.log(`password.value:${password.value}_`, page.value)
     $fetch(`/api/pages/${slug}`, {
         method: "PUT",
         headers: {

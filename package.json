@@ -10,13 +10,11 @@
   },
   "devDependencies": {
     "@headlessui/vue": "^1.7.10",
-    "@nuxt/content": "^2.4.3",
     "@nuxtjs/tailwindcss": "^6.4.1",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
     "@tiptap/extension-highlight": "2.0.0-beta.218",
     "@types/node": "^18.13.0",
-    "@vite-pwa/nuxt": "^0.0.6",
     "@vueuse/core": "^9.13.0",
     "nuxt": "^3.2.2",
     "nuxt-icon": "^0.3.2",
