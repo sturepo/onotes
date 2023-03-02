@@ -4,6 +4,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
+    "gen:types": "supabase start",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "deploy": "pnpm build && wrangler publish"
@@ -21,6 +22,7 @@
     "tippy.js": "^6.3.7"
   },
   "dependencies": {
+    "@nuxtjs/supabase": "^0.3.1",
     "@tiptap/core": "2.0.0-beta.218",
     "@tiptap/extension-code-block-lowlight": "2.0.0-beta.218",
     "@tiptap/extension-link": "2.0.0-beta.218",

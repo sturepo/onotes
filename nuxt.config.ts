@@ -1,6 +1,6 @@
 export default defineNuxtConfig({
     // Enable content to leverages <ContentRendererMarkdown /> component
-    modules: ['nuxt-icon', '@nuxtjs/tailwindcss'],
+    modules: ['@nuxtjs/supabase', 'nuxt-icon', '@nuxtjs/tailwindcss'],
     // Define storage used in API routes with useStorage()
     nitro: {
         storage: {
