@@ -101,6 +101,7 @@ const share = async () => {
         closeModal()
         setTimeout(() => {
             sharing.value = false
+            window.localStorage.removeItem('NOTES-password');
             router.push({ path: `/${slug}` });
         }, 400)
     } else {

@@ -2,12 +2,15 @@ lockfileVersion: 5.4
 
 specifiers:
   '@headlessui/vue': ^1.7.10
+  '@hocuspocus/provider': ^1.1.1
   '@nuxtjs/supabase': ^0.3.1
   '@nuxtjs/tailwindcss': ^6.4.1
   '@tailwindcss/forms': ^0.5.3
   '@tailwindcss/typography': ^0.5.9
   '@tiptap/core': 2.0.0-beta.218
   '@tiptap/extension-code-block-lowlight': 2.0.0-beta.218
+  '@tiptap/extension-collaboration': 2.0.0-beta.220
+  '@tiptap/extension-collaboration-cursor': 2.0.0-beta.220
   '@tiptap/extension-highlight': 2.0.0-beta.218
   '@tiptap/extension-link': 2.0.0-beta.218
   '@tiptap/extension-task-item': 2.0.0-beta.218
@@ -25,11 +28,17 @@ specifiers:
   nuxt: ^3.2.2
   nuxt-icon: ^0.3.2
   tippy.js: ^6.3.7
+  y-prosemirror: ^1.2.0
+  y-protocols: ^1.0.5
+  yjs: ^13.5.48
 
 dependencies:
+  '@hocuspocus/provider': 1.1.1_fhmqfz4ob5c6ch7ccxaeydvr2y
   '@nuxtjs/supabase': 0.3.1
   '@tiptap/core': 2.0.0-beta.218_@tiptap+pm@2.0.0-beta.218
   '@tiptap/extension-code-block-lowlight': 2.0.0-beta.218_p7b6nzxe7qctmzbzapdik3nr64
+  '@tiptap/extension-collaboration': 2.0.0-beta.220_xwq2545pyrjhd7b3jqqbeqlym4
+  '@tiptap/extension-collaboration-cursor': 2.0.0-beta.220_zptw4dszwx2irmrxiwypq37vbi
   '@tiptap/extension-link': 2.0.0-beta.218_p7b6nzxe7qctmzbzapdik3nr64
   '@tiptap/extension-task-item': 2.0.0-beta.218_p7b6nzxe7qctmzbzapdik3nr64
   '@tiptap/extension-task-list': 2.0.0-beta.218_xixjdlstfbsoyvyes7aewz3ng4
@@ -41,6 +50,9 @@ dependencies:
   highlight.js: 11.7.0
   lowlight: 2.8.1
   nanoid: 4.0.1
+  y-prosemirror: 1.2.0_fhmqfz4ob5c6ch7ccxaeydvr2y
+  y-protocols: 1.0.5
+  yjs: 13.5.48
 
 devDependencies:
   '@headlessui/vue': 1.7.10
@@ -791,6 +803,25 @@ packages:
       vue: ^3.2.0
     dev: true
 
+  /@hocuspocus/common/1.1.1:
+    resolution: {integrity: sha512-bCzj/EkUiWi4VWRefJq6hoAYgWthRscBt65zIee0FR7X+xbtkYSGGtyA9A+e/YPqb+uynbw721WSgxnkpW7XmQ==}
+    dependencies:
+      lib0: 0.2.63
+    dev: false
+
+  /@hocuspocus/provider/1.1.1_fhmqfz4ob5c6ch7ccxaeydvr2y:
+    resolution: {integrity: sha512-EcBMAaFDTE4rOkHCzfz80P8Ezq/obBvJ9iDTaLx/njxOchwonhyBpF2RBhT/lJRNJR+9AUB79j4ci2zgljImwQ==}
+    peerDependencies:
+      y-protocols: ^1.0.5
+      yjs: ^13.5.29
+    dependencies:
+      '@hocuspocus/common': 1.1.1
+      '@lifeomic/attempt': 3.0.3
+      lib0: 0.2.63
+      y-protocols: 1.0.5
+      yjs: 13.5.48
+    dev: false
+
   /@iconify/types/2.0.0:
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
     dev: true
@@ -858,6 +889,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@lifeomic/attempt/3.0.3:
+    resolution: {integrity: sha512-GlM2AbzrErd/TmLL3E8hAHmb5Q7VhDJp35vIbyPVA5Rz55LZuRr8pwL3qrwwkVNo05gMX1J44gURKb4MHQZo7w==}
+    dev: false
 
   /@linaria/core/3.0.0-beta.13:
     resolution: {integrity: sha512-3zEi5plBCOsEzUneRVuQb+2SAx3qaC1dj0FfFAI6zIJQoDWu0dlSwKijMRack7oO9tUWrchfj3OkKQAd1LBdVg==}
@@ -1487,6 +1522,28 @@ packages:
       '@tiptap/core': ^2.0.0-beta.209
     dependencies:
       '@tiptap/core': 2.0.0-beta.218_@tiptap+pm@2.0.0-beta.218
+    dev: false
+
+  /@tiptap/extension-collaboration-cursor/2.0.0-beta.220_zptw4dszwx2irmrxiwypq37vbi:
+    resolution: {integrity: sha512-oDZlR4Bfbl7VFcdbaXaC2wvz3a5RfHF638Vb2RKSXj7DOZc6Eay5gbLTYkXmWjHwELdjWgyHVnzFPHyn1Q71IA==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0-beta.209
+      y-prosemirror: 1.0.20
+    dependencies:
+      '@tiptap/core': 2.0.0-beta.218_@tiptap+pm@2.0.0-beta.218
+      y-prosemirror: 1.2.0_fhmqfz4ob5c6ch7ccxaeydvr2y
+    dev: false
+
+  /@tiptap/extension-collaboration/2.0.0-beta.220_xwq2545pyrjhd7b3jqqbeqlym4:
+    resolution: {integrity: sha512-CE/AqrnrTSIbLxBC2FduwRdMxBOXo73uOvwqIC6Bg1NRLh06xSi+On3boSDUbyhnXtB6o3CqyuoYR4GDvETKRA==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0-beta.209
+      '@tiptap/pm': ^2.0.0-beta.209
+      y-prosemirror: 1.0.20
+    dependencies:
+      '@tiptap/core': 2.0.0-beta.218_@tiptap+pm@2.0.0-beta.218
+      '@tiptap/pm': 2.0.0-beta.218_xixjdlstfbsoyvyes7aewz3ng4
+      y-prosemirror: 1.2.0_fhmqfz4ob5c6ch7ccxaeydvr2y
     dev: false
 
   /@tiptap/extension-document/2.0.0-beta.218_xixjdlstfbsoyvyes7aewz3ng4:
@@ -3845,6 +3902,10 @@ packages:
     resolution: {integrity: sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==}
     engines: {node: '>=0.10.0'}
 
+  /isomorphic.js/0.2.5:
+    resolution: {integrity: sha512-PIeMbHqMt4DnUP3MA/Flc0HElYjMXArsw1qwJZcm9sqR8mq3l8NYizFMty0pWwE/tzIGH3EKK5+jes5mAr85yw==}
+    dev: false
+
   /jiti/1.17.1:
     resolution: {integrity: sha512-NZIITw8uZQFuzQimqjUxIrIcEdxYDFIe/0xYfIlVXTkiBjjyBEvgasj5bb0/cHtPRD/NziPbT312sFrkI5ALpw==}
     hasBin: true
@@ -3966,6 +4027,13 @@ packages:
     dependencies:
       readable-stream: 2.3.7
     dev: true
+
+  /lib0/0.2.63:
+    resolution: {integrity: sha512-JhUd/JXR4rnWsSP1zup904ACbVFcdRieWoIGwGAtHww4zms0gNyi8EM30Rfftnk+6A10qQMSufjLM0/ncq06xw==}
+    engines: {node: '>=14'}
+    dependencies:
+      isomorphic.js: 0.2.5
+    dev: false
 
   /lilconfig/2.0.6:
     resolution: {integrity: sha512-9JROoBW7pobfsx+Sq2JsASvCo6Pfo6WWoUW79HuB1BCoBXD4PLWJPqDF6fNj67pqBYTbAHkE57M1kS/+L1neOg==}
@@ -6117,6 +6185,12 @@ packages:
       is-typedarray: 1.0.0
     dev: false
 
+  /typescript/4.9.5:
+    resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dev: false
+
   /uc.micro/1.0.6:
     resolution: {integrity: sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==}
 
@@ -6572,6 +6646,27 @@ packages:
       cuint: 0.2.2
     dev: true
 
+  /y-prosemirror/1.2.0_fhmqfz4ob5c6ch7ccxaeydvr2y:
+    resolution: {integrity: sha512-t3uxuX4HIkb1GNt8jV+dplRbNH2OmQD/BNeCCbjLD3Mq0o6JEXxHedv58ZIPFDE6ma24jljlL+u8pGvN6B37XQ==}
+    peerDependencies:
+      prosemirror-model: ^1.7.1
+      prosemirror-state: ^1.2.3
+      prosemirror-view: ^1.9.10
+      y-protocols: ^1.0.1
+      yjs: ^13.5.38
+    dependencies:
+      lib0: 0.2.63
+      typescript: 4.9.5
+      y-protocols: 1.0.5
+      yjs: 13.5.48
+    dev: false
+
+  /y-protocols/1.0.5:
+    resolution: {integrity: sha512-Wil92b7cGk712lRHDqS4T90IczF6RkcvCwAD0A2OPg+adKmOe+nOiT/N2hvpQIWS3zfjmtL4CPaH5sIW1Hkm/A==}
+    dependencies:
+      lib0: 0.2.63
+    dev: false
+
   /y18n/5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
     engines: {node: '>=10'}
@@ -6610,6 +6705,12 @@ packages:
       y18n: 5.0.8
       yargs-parser: 21.1.1
     dev: true
+
+  /yjs/13.5.48:
+    resolution: {integrity: sha512-RFUqe1UQa1iKfQ9wZkZQP33iEBBSTz6sW3S5CWzHEe0JVksOi8AzspSTvQk5VskoJj4HzMUYgaNcPrE0MqJ8xQ==}
+    dependencies:
+      lib0: 0.2.63
+    dev: false
 
   /ylru/1.3.2:
     resolution: {integrity: sha512-RXRJzMiK6U2ye0BlGGZnmpwJDPgakn6aNQ0A7gHRbD4I0uvK4TW6UqkK1V0pp9jskjJBAXd3dRrbzWkqJ+6cxA==}

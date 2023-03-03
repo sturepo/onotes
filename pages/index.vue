@@ -41,7 +41,7 @@ watch(editing, (v) => {
     <div class="dark:bg-slate-900 bg-slate-100 flex flex-col items-center min-h-screen pt-6 pb-8" @click="save">
         <div
             class="bg-white dark:bg-slate-800 w-full sm:w-max px-3 pt-3 sm:px-5 sm:pt-3 shadow shadow-slate-300 dark:shadow-slate-600 rounded-md min-h-[calc(100vh-140px)]">
-            <Tiptap @click.stop="editMode" v-model:editing-value="editing" v-model="page.body" />
+            <Tiptap :is-colab="false" @click.stop="editMode" v-model:editing-value="editing" v-model="page.body" />
         </div>
     </div>
     <div class="flex flex-col items-end fixed right-10 bottom-8 gap-y-4">

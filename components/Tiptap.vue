@@ -1,26 +1,18 @@
 <template>
-    <editor-content :ref="editorRef" :editor="editor" />
+    <editor-content :editor="editor" />
 </template>
 
 <script setup lang="ts">
 import { useEditor, EditorContent, Content } from "@tiptap/vue-3"
-import TaskItem from '@tiptap/extension-task-item'
-import TaskList from '@tiptap/extension-task-list'
-import Typography from '@tiptap/extension-typography'
-import Link from '@tiptap/extension-link'
-import { lowlight } from 'lowlight/lib/core'
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
-import Highlight from "@tiptap/extension-highlight"
-import StarterKit from "@tiptap/starter-kit"
-import css from 'highlight.js/lib/languages/css'
-import js from 'highlight.js/lib/languages/javascript'
-import ts from 'highlight.js/lib/languages/typescript'
-import html from 'highlight.js/lib/languages/xml'
 
+const props = defineProps({
+    modelValue: String, isColab: Boolean, editingValue: Boolean, user: Object({
+        name: String,
+        color: String
+    })
+})
 
-const props = defineProps({ modelValue: String, editingValue: Boolean })
 const emit = defineEmits(["update:modelValue", "update:editingValue", "blur"])
-const editorRef = ref()
 
 const editing = computed({
     get() {
@@ -40,39 +32,16 @@ const body = computed({
     }
 })
 
-lowlight.registerLanguage('html', html)
-lowlight.registerLanguage('css', css)
-lowlight.registerLanguage('js', js)
-lowlight.registerLanguage('ts', ts)
-
 const editor = useEditor({
     content: props.modelValue,
-    extensions: [
-        StarterKit.configure({
-            // disable extension as it's already present in CodeBlockLowlight
-            codeBlock: false,
-            // collaboration comes with it's own history extension
-            // history: false
-        }),
-        Typography,
-        TaskList.configure({
-            HTMLAttributes: {
-                class: 'flex flex-col space-y-2'
-            }
-        }),
-        TaskItem.configure({
-            nested: true,
-        }),
-        Highlight.configure({
-            HTMLAttributes: {
-                class: 'inline-block px-2 rounded-lg selection:bg-indigo-800 bg-indigo-500 text-white ',
-            },
-        }),
-        Link,
-        CodeBlockLowlight.configure({
-            lowlight,
-        }),
-    ],
+    extensions: await makeExtensions((
+        props.isColab === true ? ({
+            isColab: true,
+            user: props.user
+        }) : ({
+            isColab: false
+        })
+    )),
     onBlur: () => {
         emit("blur", false)
     },
@@ -86,7 +55,7 @@ const editor = useEditor({
     },
     editable: props.editingValue
 })
-
+editor.value?.registerPlugin
 watch(body, (content) => {
     const isSame = editor.value?.getHTML() === content
     if (!isSame) {
@@ -198,5 +167,32 @@ ul[data-type=taskList] li>label {
 ul[data-type=taskList] li>div {
     margin-top: 0px;
     flex: 1 1 auto;
+}
+
+.collaboration-cursor__caret {
+    position: relative;
+    margin-left: -1px;
+    margin-right: -1px;
+    border-left: 1px solid #0D0D0D;
+    border-right: 1px solid #0D0D0D;
+    word-break: normal;
+    pointer-events: none;
+}
+
+.collaboration-cursor__label {
+    position: absolute;
+    top: -1.4em;
+    left: -1px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    color: #0d0d0d;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px 3px 3px 0;
+    white-space: nowrap;
 }
 </style>

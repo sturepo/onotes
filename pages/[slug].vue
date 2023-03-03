@@ -101,7 +101,8 @@ function save() {
         .catch((err) => {
             page.value.editing = page.value.saving = false
             page.value.validated = false;
-            alert(err)
+            console.log(err)
+            isOpen.update(() => true)
         })
 }
 

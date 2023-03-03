@@ -22,9 +22,12 @@
     "tippy.js": "^6.3.7"
   },
   "dependencies": {
+    "@hocuspocus/provider": "^1.1.1",
     "@nuxtjs/supabase": "^0.3.1",
     "@tiptap/core": "2.0.0-beta.218",
     "@tiptap/extension-code-block-lowlight": "2.0.0-beta.218",
+    "@tiptap/extension-collaboration": "2.0.0-beta.220",
+    "@tiptap/extension-collaboration-cursor": "2.0.0-beta.220",
     "@tiptap/extension-link": "2.0.0-beta.218",
     "@tiptap/extension-task-item": "2.0.0-beta.218",
     "@tiptap/extension-task-list": "2.0.0-beta.218",
@@ -35,6 +38,9 @@
     "@tiptap/vue-3": "2.0.0-beta.218",
     "highlight.js": "^11.7.0",
     "lowlight": "^2.8.1",
-    "nanoid": "^4.0.1"
+    "nanoid": "^4.0.1",
+    "y-prosemirror": "^1.2.0",
+    "y-protocols": "^1.0.5",
+    "yjs": "^13.5.48"
   }
 }
