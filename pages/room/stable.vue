@@ -7,7 +7,7 @@ const route = useRoute()
 
 let realtimeChannel: RealtimeChannel
 let cleanup: () => void
-let user_id: string
+let user_id: string = nanoid(4)
 const client = useSupabaseClient<Database>()
 
 const users = reactive(new Set<string>())
@@ -49,43 +49,6 @@ const mousemove = (e: MouseEvent) => useThrottleFn(() => {
     }
 }, 100)
 
-// Once page is mounted, listen to changes on the `collaborators` table and refresh collaborators when receiving event
-onMounted(() => {
-    user_id = nanoid(4)
-    cleanup = useEventListener(window, 'mousemove', (e) => mousemove(e)())
-    // Real time listener for new workouts
-    console.log("Initialized")
-    if (!realtimeChannel) {
-        realtimeChannel = client.channel('room1', {
-            config: {
-                broadcast: {
-                    self: false
-                }
-            }
-        }).on('broadcast', { event: 'cursor-pos' }, ({ payload }) => {
-            if (!users.has(payload.user_id)) {
-                users.add(payload.user_id)
-                x.set(payload.user_id, signal(payload.x))
-                y.set(payload.user_id, signal(payload.y))
-                mouse_colors.set(payload.user_id, randomColor())
-            } else {
-                x.get(payload.user_id) && ((x.get(payload.user_id))?.set(payload.x))
-                y.get(payload.user_id) && ((y.get(payload.user_id))?.set(payload.y))
-            }
-        })
-        realtimeChannel.subscribe((status) => {
-            if (status === 'SUBSCRIBED') {
-                console.log('SUBSCRIBED', user_id)
-            }
-        })
-    }
-})
-
-// Don't forget to unsubscribe when user left the page
-onUnmounted(() => {
-    client.removeChannel(realtimeChannel)
-    if (cleanup) cleanup() // This will unregister the listener.
-})
 </script>
 <template>
     <pre>  {{ JSON.stringify(document, null, 2) }} </pre>

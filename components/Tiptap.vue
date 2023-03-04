@@ -3,14 +3,113 @@
 </template>
 
 <script setup lang="ts">
-import { useEditor, EditorContent, Content } from "@tiptap/vue-3"
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
+import Typography from '@tiptap/extension-typography'
+import Link from '@tiptap/extension-link'
+import { lowlight } from 'lowlight/lib/core'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import Highlight from "@tiptap/extension-highlight"
+import StarterKit from "@tiptap/starter-kit"
+import css from 'highlight.js/lib/languages/css'
+import go from 'highlight.js/lib/languages/go'
+import c from 'highlight.js/lib/languages/c'
+import dart from 'highlight.js/lib/languages/dart'
+import js from 'highlight.js/lib/languages/javascript'
+import ts from 'highlight.js/lib/languages/typescript'
+import html from 'highlight.js/lib/languages/xml'
 
-const props = defineProps({
-    modelValue: String, isColab: Boolean, editingValue: Boolean, user: Object({
-        name: String,
-        color: String
+import Collaboration from '@tiptap/extension-collaboration'
+import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
+
+import { useEditor, EditorContent, Content } from "@tiptap/vue-3"
+import * as Y from 'yjs'
+import { HocuspocusProvider } from '@hocuspocus/provider'
+
+lowlight.registerLanguage('html', html)
+lowlight.registerLanguage('css', css)
+lowlight.registerLanguage('js', js)
+lowlight.registerLanguage('ts', ts)
+lowlight.registerLanguage('go', go)
+lowlight.registerLanguage('dart', dart)
+lowlight.registerLanguage('c', c)
+
+interface baseOption {
+    isColab: false
+    user?: never
+    documentName?: never
+    roomId?: never
+}
+
+interface colabOption {
+    isColab: true
+    user: {
+        name: string
+        color: string
+    },
+    documentName: string
+    roomId: string
+}
+
+type Options = baseOption | colabOption
+
+const makeExtensions = ({ isColab, user, documentName, roomId }: Options = { isColab: false }) => {
+    const extensions = [
+        StarterKit.configure({
+            // disable extension as it's already present in CodeBlockLowlight
+            codeBlock: false,
+            // collaboration comes with it's own history extension
+            history: isColab ? false : {
+                depth: 100,
+                newGroupDelay: 1000
+            }
+        }),
+        Typography,
+        TaskList.configure({
+            HTMLAttributes: {
+                class: 'flex flex-col space-y-2'
+            }
+        }),
+        TaskItem.configure({
+            nested: true,
+        }),
+        Highlight.configure({
+            HTMLAttributes: {
+                class: 'inline-block px-2 rounded-lg selection:bg-indigo-800 bg-indigo-500 text-white ',
+            },
+        }),
+        Link,
+        CodeBlockLowlight.configure({
+            lowlight,
+        }),
+    ]
+    if (!isColab) return extensions;
+    const ydoc = new Y.Doc()
+    const provider = new HocuspocusProvider({
+        url: 'ws://127.0.0.1:1234',
+        name: documentName ? `${roomId}.${documentName}` : `${roomId}`,
+        document: ydoc,
     })
-})
+    return [
+        ...extensions,
+        Collaboration.configure({
+            document: ydoc,
+        }),
+        CollaborationCursor.configure({
+            provider,
+            user
+        }),
+    ]
+}
+
+const props = defineProps([
+    'modelValue',
+    'editingValue',
+    'isColab',
+    'user',
+    'id',
+    'documentName',
+])
 
 const emit = defineEmits(["update:modelValue", "update:editingValue", "blur"])
 
@@ -32,21 +131,32 @@ const body = computed({
     }
 })
 
-const editor = useEditor({
-    content: props.modelValue,
-    extensions: await makeExtensions((
+let editor = useEditor({
+    extensions: makeExtensions((
         props.isColab === true ? ({
             isColab: true,
-            user: props.user
+            user: props.user,
+            documentName: props?.documentName,
+            roomId: props.id
         }) : ({
-            isColab: false
+            isColab: false,
         })
     )),
     onBlur: () => {
         emit("blur", false)
     },
+    onCreate: () => {
+        if (editor.value?.getHTML() === '<p></p>') {
+            editor.value?.commands.setContent(body.value as Content, false)
+        }
+    },
     onUpdate: () => {
-        emit("update:modelValue", editor.value?.getHTML())
+        console.log(`BODY:${body.value} \n HTML: _${editor.value?.getHTML()}_`)
+        if (editor.value?.getHTML() === '<p></p>') {
+            editor.value?.commands.setContent(body.value as Content, false)
+        } else {
+            body.value = editor.value?.getHTML()
+        }
     },
     editorProps: {
         attributes: {
@@ -55,10 +165,11 @@ const editor = useEditor({
     },
     editable: props.editingValue
 })
-editor.value?.registerPlugin
+
 watch(body, (content) => {
-    const isSame = editor.value?.getHTML() === content
-    if (!isSame) {
+    const editorContent = editor.value?.getHTML()
+    const isSame = editorContent === content
+    if (!isSame && editorContent !== null && editorContent !== undefined) {
         editor.value?.commands.setContent(content as Content, false)
     }
 })

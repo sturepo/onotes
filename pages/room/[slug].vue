@@ -1,95 +1,170 @@
 <script setup lang="ts">
-import type { RealtimeChannel } from '@supabase/supabase-js'
-import type { Database } from '~/types'
-import { useEventListener, useThrottleFn } from '@vueuse/core'
+import { onKeyStroke } from '@vueuse/core'
 import { nanoid } from 'nanoid';
 const route = useRoute()
+const slug = route.params.slug as string;
 
-let realtimeChannel: RealtimeChannel
-let cleanup: () => void
-let user_id: string
-const client = useSupabaseClient<Database>()
+const page = useState<{
+    body: string
+    is_public: boolean
+    name: string
+    validating: boolean
+    validated: boolean
+    editing: boolean
+    saving: boolean
+}>("genpage")
 
-const users = reactive(new Set<string>())
-const mouse_colors = reactive(new Map<string, string>())
+const user_id: string = nanoid(4)
+const user_color = randomColor()
 
-const x = reactive(new Map<string, {
-    (): number;
-    set(value: number): void;
-    update(updater: (v: number) => number): void;
-    mutate(mutator: (v: number) => number): void;
-}>())
-
-const y = reactive(new Map<string, {
-    (): number;
-    set(value: number): void;
-    update(updater: (v: number) => number): void;
-    mutate(mutator: (v: number) => number): void;
-}>())
-
-const { data: document } = await useAsyncData('document', async () => {
-    const { data } = await client.from('documents').select(
-        '*'
-    ).eq('id', route.params.slug).single()
-    return data
-})
-
-const mousemove = (e: MouseEvent) => useThrottleFn(() => {
-    // do something, it will be called at most 1 time per second
-    if (realtimeChannel) {
-        realtimeChannel.send({
-            type: 'broadcast',
-            event: 'cursor-pos',
-            payload: {
-                user_id,
-                x: e.clientX,
-                y: e.clientY,
-            },
-        })
+const isOpen = signal(false)
+const password = usePassword()
+// QW5tBw
+// Fetch the page on SSR
+if (!page.value) {
+    try {
+        page.value = {
+            ...(await $fetch(`/api/pages/${slug}`, {
+                headers: {
+                    password: password.value
+                }
+            })),
+            editing: false,
+            saving: false,
+            validated: true,
+            validating: false,
+        }
+    } catch (error) {
+        console.log(error)
+        page.value = {
+            body: "<h1>Authenticate First</h1>",
+            is_public: false,
+            name: "docnote",
+            editing: false,
+            saving: false,
+            validated: false,
+            validating: false
+        };
     }
-}, 100)
+}
 
 // Once page is mounted, listen to changes on the `collaborators` table and refresh collaborators when receiving event
 onMounted(() => {
-    user_id = nanoid(4)
-    cleanup = useEventListener(window, 'mousemove', (e) => mousemove(e)())
-    // Real time listener for new workouts
-    console.log("Initialized")
-    if (!realtimeChannel) {
-        realtimeChannel = client.channel('room1', {
-            config: {
-                broadcast: {
-                    self: false
-                }
+    // Re-parse on hydration t o enable shiki highlight for code blocks
+    if (!page.value.is_public) {
+        page.value.validating = true
+        page.value.body = '<h1>Validating ...</h1>'
+        $fetch(`/api/pages/${slug}`, {
+            headers: {
+                password: password.value
             }
-        }).on('broadcast', { event: 'cursor-pos' }, ({ payload }) => {
-            if (!users.has(payload.user_id)) {
-                users.add(payload.user_id)
-                x.set(payload.user_id, signal(payload.x))
-                y.set(payload.user_id, signal(payload.y))
-                mouse_colors.set(payload.user_id, randomColor())
-            } else {
-                x.get(payload.user_id) && ((x.get(payload.user_id))?.set(payload.x))
-                y.get(payload.user_id) && ((y.get(payload.user_id))?.set(payload.y))
+        }).then((v) => {
+            page.value = {
+                ...page.value,
+                ...v
             }
+            page.value.validating = false
+            page.value.validated = true
+            isOpen.update(() => false)
+        }).catch((error) => {
+            console.log(error, password.value)
+            page.value.body = '<h1>Error</h1>'
+            page.value.validating = false
+            page.value.validated = false
+            isOpen.update(() => true)
         })
-        realtimeChannel.subscribe((status) => {
-            if (status === 'SUBSCRIBED') {
-                console.log('SUBSCRIBED', user_id)
-            }
+    }
+})
+
+const canExit = computed(() => !page.value.editing && !page.value.saving)
+
+watch(canExit, (v) => {
+    if (v) {
+        removeEventListener("beforeunload", beforeUnloadListener, { capture: true });
+    } else {
+        addEventListener("beforeunload", beforeUnloadListener, { capture: true });
+    }
+})
+
+async function editMode() {
+    if (page.value.validated) page.value.editing = true
+    else if (!password.value || !page.value.validated) isOpen.update(() => true)
+    await nextTick()
+}
+
+function save() {
+    if (!page.value.editing || page.value.saving) return
+    page.value.saving = true
+    $fetch(`/api/pages/${slug}`, {
+        method: "PUT",
+        headers: {
+            password: password.value,
+        },
+        body: page.value.body,
+    })
+        .then(async () => {
+            page.value.editing = page.value.saving = false
         })
+        .catch((err) => {
+            page.value.editing = page.value.saving = false
+            page.value.validated = false;
+            console.log(err)
+            isOpen.update(() => true)
+        })
+}
+
+const keyEventCleanup = onKeyStroke(['ctrl', ';'], (e) => {
+    if (e.ctrlKey && e.key === ';') {
+        isOpen.update(() => true)
     }
 })
 
 // Don't forget to unsubscribe when user left the page
 onUnmounted(() => {
-    client.removeChannel(realtimeChannel)
-    if (cleanup) cleanup() // This will unregister the listener.
+    keyEventCleanup()
 })
 </script>
 <template>
-    <pre>  {{ JSON.stringify(document, null, 2) }} </pre>
-    <template v-for="user in users">
-        <Cursor :x="x.get(user)" :mouse-color="mouse_colors.get(user)" :y="y.get(user)" />
-    </template>
+    <div class="dark:bg-slate-900 bg-slate-100 flex flex-col items-center min-h-screen pt-6 pb-8" @click="save">
+        <div
+            class="bg-white dark:bg-slate-800 w-full sm:w-max px-3 pt-3 sm:px-5 sm:pt-3 shadow shadow-slate-300 dark:shadow-slate-600 rounded-md min-h-[calc(100vh-140px)]">
+            <ClientOnly>
+                <Tiptap :is-colab="true" :user="{ name: user_id, color: user_color.hex }" :id="slug"
+                    :document-name="page.name" @click.stop="editMode" v-model:editing-value="page.editing"
+                    v-model="page.body" />
+            </ClientOnly>
+        </div>
+    </div>
+    <div class="flex flex-col items-end fixed right-10 bottom-8 gap-y-4">
+        <button v-if="page.editing || page.saving" @click="save"
+            class="group inline-flex tab-highlight-none items-center gap-x-2 h-9 px-3 rounded-full text-sm font-semibold whitespace-nowrap text-white/90 hover:text-white focus:outline-none focus:ring-2 ring-offset-2 ring-offset-white bg-blue-700 hover:bg-blue-600 active:bg-blue-600/95 ring-blue-400">
+            <span class="h-[14px] leading-3">
+                {{ page.saving ? "SAVING" : "SAVE" }}
+            </span>
+            <span class="sr-only"> Saving the document </span>
+            <Icon preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision" :name="
+                page.saving
+                    ? 'heroicons:document-text'
+                    : 'heroicons:cloud-arrow-up'
+            " class="w-5 h-5" />
+        </button>
+        <button @click="editMode" v-else
+            class="group inline-flex tab-highlight-none items-center gap-x-2 h-9 px-3 rounded-full text-sm font-semibold whitespace-nowrap text-white/90 hover:text-white focus:outline-none focus:ring-2 ring-offset-2 ring-offset-white bg-indigo-700 hover:bg-indigo-600 active:bg-indigo-600/95 ring-indigo-400 dark:bg-slate-700 dark:hover:bg-slate-600 dark:active:bg-slate-600/95 dark:ring-slate-400">
+            <span class="h-[14px] leading-3"> EDIT THE PAGE </span>
+            <span class="sr-only">, Edit the document </span>
+            <Icon preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision" name="heroicons-solid:pencil"
+                class="w-5 h-5" />
+        </button>
+        <ClientOnly>
+            <ThemeBtn />
+        </ClientOnly>
+        <div v-if="page.validated"
+            class="group inline-flex tab-highlight-none items-center gap-x-2 h-9 px-3 rounded-full text-sm font-semibold whitespace-nowrap text-white/90 hover:text-white focus:outline-none focus:ring-2 ring-offset-2 ring-offset-white bg-sky-400 hover:bg-sky-300 active:bg-sky-500/95 ring-sky-200 dark:bg-sky-500 dark:hover:bg-sky-600 dark:active:bg-sky-600/95 dark:ring-sky-400">
+            <span class="h-[14px] leading-3"> Verified </span>
+            <span class="sr-only">, Verified User </span>
+            <Icon preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision"
+                name="heroicons:check-badge-solid" class="w-5 h-5 text-white" />
+        </div>
+    </div>
+    <PasswordPrompt :is-open="isOpen" />
 </template>

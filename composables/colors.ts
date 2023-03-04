@@ -5,32 +5,56 @@ function getRandomInt(min: number, max: number): number {
 }
 
 export const randomColor = () => {
-    const i = getRandomInt(0, colors.length)
-    console.log(i)
-    return colors[i]
+    const i = getRandomInt(0, 22)
+    return { hex: hexColors[i], tailwind: tailwindColors[i] }
 }
 
-const colors = [
-    'dark:text-slate-300 text-slate-500',
-    'dark:text-gray-300 text-gray-500',
-    'dark:text-zinc-300 text-zinc-500',
-    'dark:text-neutral-300 text-neutral-500',
-    'dark:text-stone-300 text-stone-500',
-    'dark:text-red-300 text-red-500',
-    'dark:text-orange-300 text-orange-500',
-    'dark:text-amber-300 text-amber-500',
-    'dark:text-yellow-300 text-yellow-500',
-    'dark:text-lime-300 text-lime-500',
-    'dark:text-green-300 text-green-500',
-    'dark:text-emerald-300 text-emerald-500',
-    'dark:text-teal-300 text-teal-500',
-    'dark:text-cyan-300 text-cyan-500',
-    'dark:text-sky-300 text-sky-500',
-    'dark:text-blue-300 text-blue-500',
-    'dark:text-indigo-300 text-indigo-500',
-    'dark:text-violet-300 text-violet-500',
-    'dark:text-purple-300 text-purple-500',
-    'dark:text-fuchsia-300 text-fuchsia-500',
+const tailwindColors = [
+    'dark:text-slate-400 text-slate-500',
+    'dark:text-gray-400 text-gray-500',
+    'dark:text-zinc-400 text-zinc-500',
+    'dark:text-neutral-400 text-neutral-500',
+    'dark:text-stone-400 text-stone-500',
+    'dark:text-red-400 text-red-500',
+    'dark:text-orange-400 text-orange-500',
+    'dark:text-amber-400 text-amber-500',
+    'dark:text-yellow-400 text-yellow-500',
+    'dark:text-lime-400 text-lime-500',
+    'dark:text-green-400 text-green-500',
+    'dark:text-emerald-400 text-emerald-500',
+    'dark:text-teal-400 text-teal-500',
+    'dark:text-cyan-400 text-cyan-500',
+    'dark:text-sky-400 text-sky-500',
+    'dark:text-blue-400 text-blue-500',
+    'dark:text-indigo-400 text-indigo-500',
+    'dark:text-violet-400 text-violet-500',
+    'dark:text-purple-400 text-purple-500',
+    'dark:text-fuchsia-400 text-fuchsia-500',
     'dark:text-pink-300 text-pink-500',
     'dark:text-rose-300 text-rose-500',
+]
+
+const hexColors = [
+    '#64748b',
+    '#6b7280',
+    '#71717a',
+    '#737373',
+    '#78716c',
+    '#ef4444',
+    '#f97316',
+    '#f59e0b',
+    '#eab308',
+    '#84cc16',
+    '#22c55e',
+    '#10b981',
+    '#14b8a6',
+    '#06b6d4',
+    '#0ea5e9',
+    '#3b82f6',
+    '#6366f1',
+    '#8b5cf6',
+    '#a855f7',
+    '#d946ef',
+    '#ec4899',
+    '#f43f5e',
 ]

@@ -117,7 +117,7 @@ onKeyStroke(['ctrl', ';'], (e) => {
     <div class="dark:bg-slate-900 bg-slate-100 flex flex-col items-center min-h-screen pt-6 pb-8" @click="save">
         <div
             class="bg-white dark:bg-slate-800 w-full sm:w-max px-3 pt-3 sm:px-5 sm:pt-3 shadow shadow-slate-300 dark:shadow-slate-600 rounded-md min-h-[calc(100vh-140px)]">
-            <Tiptap @click.stop="editMode" v-model:editing-value="page.editing" v-model="page.body" />
+            <Tiptap :is-colab="false" @click.stop="editMode" v-model:editing-value="page.editing" v-model="page.body" />
         </div>
     </div>
     <div class="flex flex-col items-end fixed right-10 bottom-8 gap-y-4">
@@ -150,6 +150,13 @@ onKeyStroke(['ctrl', ';'], (e) => {
             <Icon preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision"
                 name="heroicons:check-badge-solid" class="w-5 h-5 text-white" />
         </div>
+        <LazyNuxtLink :href="`/room/${slug}`"
+            class="group inline-flex tab-highlight-none items-center gap-x-2 h-9 px-3 rounded-full text-sm font-semibold whitespace-nowrap text-white/90 hover:text-white focus:outline-none focus:ring-2 ring-offset-2 ring-offset-white bg-amber-600 hover:bg-amber-500 active:bg-amber-600/95 ring-amber-400 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:active:bg-indigo-600/95 dark:ring-slate-400">
+            <span class="h-[14px] leading-3"> EXPERIMENTAL MODE </span>
+            <span class="sr-only">, Edit the document </span>
+            <Icon preserveAspectRatio="xMidYMid meet" shape-rendering="geometricPrecision"
+                name="heroicons:paint-brush-20-solid" class="w-5 h-5" />
+        </LazyNuxtLink>
     </div>
     <PasswordPrompt :is-open="isOpen" />
 </template>
